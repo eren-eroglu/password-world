@@ -6,15 +6,16 @@
   <title>Password Generator</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
+    body {
+      background-color: #0f0c17;
+      color: #fff;
+      font-family: 'Roboto', sans-serif;
+    }
+
     .container {
       max-width: 400px;
       margin: 0 auto;
       padding: 20px;
-    }
-
-    body {
-      background-color: #0f0c17;
-      color: #fff;
     }
 
     .form-input {
@@ -27,6 +28,7 @@
       background-color: #7b88ff;
       border-color: #7b88ff;
       color: #fff;
+      transition: background-color 0.3s;
     }
 
     .button:hover {
@@ -87,11 +89,29 @@
     .description {
       margin-top: 2rem;
     }
+
+    .github-link {
+      color: #7b88ff;
+      text-decoration: none;
+    }
+
+    .github-link:hover {
+      text-decoration: underline;
+    }
+
+    .contact-section {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .contact-text {
+      color: #7b88ff;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1 class="text-2xl font-bold mb-4">Password Generator</h1>
+    <h1 class="text-2xl text-center  mb-4">Password World</h1>
     <div class="mb-4">
       <label class="block mb-2">Password Length:</label>
       <input id="password-length" type="number" min="4" max="20" value="8" class="w-full py-2 px-3 border form-input rounded">
@@ -123,126 +143,32 @@
       <div id="strength-meter" class="strength-meter mt-2"></div>
     </div>
     <div class="flex justify-between">
-      <button id="generate-button" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded button">Generate Password</button>
-      <button id="copy-button" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded button">Copy Password</button>
+      <button id="generate-button" class="bg-blue-500 hover:bg-blue-600 p-3 text-white rounded button">Generate Password</button>
+      <button id="copy-button" class="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded button">Copy Password</button>
     </div>
     <ul id="password-list" class="mt-4"></ul>
 
     <div class="description">
-      <h2 class="text-lg font-bold mb-2">About Password Generator</h2>
+      <h2 class="text-lg font-bold mb-2">About Password World</h2>
       <p>
         This is a modern password generation tool designed to create strong and secure passwords. It allows you to customize the length and character types of the password to suit your needs. 
       </p>
       <p class="mt-2">
-        <strong class="text-green-500">This app does not store any passwords.</strong>  The passwords are generated on the client-side and are not transmitted or stored anywhere. This ensures that your passwords remain private and reduces the risk of unauthorized access. However, it is important to follow good password management practices to enhance the security of your passwords.
+        <strong class="text-green-500">This app does not store any passwords.</strong> The passwords are generated on the client-side and are not transmitted or stored anywhere. This ensures that your passwords remain private and reduces the risk of unauthorized access. However, it is important to follow good password management practices to enhance the security of your passwords.
+      </p>
+      <p class="mt-2">
+        You can check out the source code on <strong><a href="https://github.com/eren-eroglu/password-world" class="github-link">GitHub</a></strong>.
+      </p>
+    </div>
+
+    <div class="contact-section">
+      <h2 class="text-lg font-bold mb-2">Contact</h2>
+      <p class="contact-text">
+        For any inquiries or feedback, please email me at <strong><a href="mailto:ereneroglu.dev@gmail.com">
+                ereneroglu.dev@gmail.com
+        </strong>
       </p>
     </div>
   </div>
-
-  <script>
-    const generateButton = document.getElementById("generate-button");
-    const copyButton = document.getElementById("copy-button");
-    const passwordLengthInput = document.getElementById("password-length");
-    const includeUppercaseInput = document.getElementById("include-uppercase");
-    const includeLowercaseInput = document.getElementById("include-lowercase");
-    const includeNumbersInput = document.getElementById("include-numbers");
-    const includeSpecialInput = document.getElementById("include-special");
-    const generatedPasswordInput = document.getElementById("generated-password");
-    const passwordList = document.getElementById("password-list");
-    const strengthMeter = document.getElementById("strength-meter");
-
-    generateButton.addEventListener("click", generatePassword);
-    copyButton.addEventListener("click", copyPassword);
-
-    function generatePassword() {
-      const length = parseInt(passwordLengthInput.value);
-      const includeUppercase = includeUppercaseInput.checked;
-      const includeLowercase = includeLowercaseInput.checked;
-      const includeNumbers = includeNumbersInput.checked;
-      const includeSpecial = includeSpecialInput.checked;
-
-      if (!includeUppercase && !includeLowercase && !includeNumbers && !includeSpecial) {
-        showErrorPopup("Please select at least one character type.");
-        return;
-      }
-
-      let charset = "";
-      if (includeUppercase) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      if (includeLowercase) charset += "abcdefghijklmnopqrstuvwxyz";
-      if (includeNumbers) charset += "0123456789";
-      if (includeSpecial) charset += "!@#$%^&*()_+~`|}{[]:;?><,./-=";
-
-      let password = "";
-      for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * charset.length);
-        password += charset[randomIndex];
-      }
-
-      generatedPasswordInput.value = password;
-      updatePasswordStrength(password);
-    }
-
-    function updatePasswordStrength(password) {
-      const length = password.length;
-      let strength = 0;
-
-      if (length >= 8) {
-        strength++;
-      }
-
-      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
-        strength++;
-      }
-
-      if (/[0-9]/.test(password)) {
-        strength++;
-      }
-
-      if (/[^a-zA-Z0-9]/.test(password)) {
-        strength++;
-      }
-
-      strengthMeter.classList.remove("strength-weak", "strength-moderate", "strength-strong");
-
-      switch (strength) {
-        case 1:
-          strengthMeter.classList.add("strength-weak");
-          break;
-        case 2:
-          strengthMeter.classList.add("strength-moderate");
-          break;
-        case 3:
-        case 4:
-          strengthMeter.classList.add("strength-strong");
-          break;
-      }
-    }
-
-    function copyPassword() {
-      generatedPasswordInput.select();
-      document.execCommand("copy");
-      showSuccessPopup("Password copied to clipboard!");
-    }
-
-    function showErrorPopup(message) {
-      const errorPopup = document.createElement("div");
-      errorPopup.classList.add("error-popup");
-      errorPopup.textContent = message;
-      document.body.appendChild(errorPopup);
-      setTimeout(() => {
-        errorPopup.remove();
-      }, 3000);
-    }
-
-    function showSuccessPopup(message) {
-      const successPopup = document.createElement("div");
-      successPopup.classList.add("success-popup");
-      successPopup.textContent = message;
-      document.body.appendChild(successPopup);
-      setTimeout(() => {
-        successPopup.remove();
-      }, 3000);
-    }
-  </script>
 </body>
 </html>
