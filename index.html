@@ -74,6 +74,19 @@
       text-align: center;
       margin-bottom: 1rem;
     }
+
+    .success-popup {
+      background-color: #7eff7e;
+      color: #fff;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .description {
+      margin-top: 2rem;
+    }
   </style>
 </head>
 <body>
@@ -114,6 +127,16 @@
       <button id="copy-button" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded button">Copy Password</button>
     </div>
     <ul id="password-list" class="mt-4"></ul>
+
+    <div class="description">
+      <h2 class="text-lg font-bold mb-2">About Password Generator</h2>
+      <p>
+        This is a modern password generation tool designed to create strong and secure passwords. It allows you to customize the length and character types of the password to suit your needs. 
+      </p>
+      <p class="mt-2">
+        <strong class="text-green-500">This app does not store any passwords.</strong>  The passwords are generated on the client-side and are not transmitted or stored anywhere. This ensures that your passwords remain private and reduces the risk of unauthorized access. However, it is important to follow good password management practices to enhance the security of your passwords.
+      </p>
+    </div>
   </div>
 
   <script>
@@ -198,7 +221,7 @@
     function copyPassword() {
       generatedPasswordInput.select();
       document.execCommand("copy");
-      alert("Password copied to clipboard!");
+      showSuccessPopup("Password copied to clipboard!");
     }
 
     function showErrorPopup(message) {
@@ -208,6 +231,16 @@
       document.body.appendChild(errorPopup);
       setTimeout(() => {
         errorPopup.remove();
+      }, 3000);
+    }
+
+    function showSuccessPopup(message) {
+      const successPopup = document.createElement("div");
+      successPopup.classList.add("success-popup");
+      successPopup.textContent = message;
+      document.body.appendChild(successPopup);
+      setTimeout(() => {
+        successPopup.remove();
       }, 3000);
     }
   </script>
