@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Generator</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-2xl font-bold mb-4">Password Generator</h1>
+    <div class="mb-4">
+      <label class="block mb-2">Password Length:</label>
+      <input id="password-length" type="number" min="4" max="20" value="8" class="w-full py-2 px-3 border border-gray-300 rounded">
+    </div>
+    <div class="mb-4">
+      <label class="block mb-2">Generated Password:</label>
+      <input id="generated-password" type="text" class="w-full py-2 px-3 border border-gray-300 rounded" readonly>
+    </div>
+    <button id="generate-button" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Generate Password</button>
+    <button id="save-button" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">Save Password</button>
+    <ul id="password-list" class="mt-4"></ul>
+  </div>
+
+  <script>
+    const generateButton = document.getElementById("generate-button");
+    const saveButton = document.getElementById("save-button");
+    const passwordLengthInput = document.getElementById("password-length");
+    const generatedPasswordInput = document.getElementById("generated-password");
+    const passwordList = document.getElementById("password-list");
+
+    generateButton.addEventListener("click", generatePassword);
+    saveButton.addEventListener("click", savePassword);
+
+    // Load saved passwords from local storage when the page loads
+    document.addEventListener("DOMContentLoaded", loadPasswords);
+
+    function generatePassword() {
+      const length = parseInt(passwordLengthInput.value);
+      const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+      }
+      generatedPasswordInput.value = password;
+    }
+
+    function savePassword() {
+      const password = generatedPasswordInput.value;
+      if (password) {
+        const listItem = document.createElement("li");
+        listItem.innerText = password;
+        passwordList.appendChild(listItem);
+        saveToLocalStorage(password);
+      }
+    }
+
+    function saveToLocalStorage(password) {
+      let passwords = localStorage.getItem("passwords");
+      if (passwords) {
+        passwords = JSON.parse(passwords);
+      } else {
+        passwords = [];
+      }
+      passwords.push(password);
+      localStorage.setItem("passwords", JSON.stringify(passwords));
+    }
+
+    function loadPasswords() {
+      let passwords = localStorage.getItem("passwords");
+      if (passwords) {
+        passwords = JSON.parse(passwords);
+        passwords.forEach(password => {
+          const listItem = document.createElement("li");
+          listItem.innerText = password;
+          passwordList.appendChild(listItem);
+        });
+      }
+    }
+  </script>
+</body>
+</html>
