@@ -11,6 +11,69 @@
       margin: 0 auto;
       padding: 20px;
     }
+
+    body {
+      background-color: #0f0c17;
+      color: #fff;
+    }
+
+    .form-input {
+      background-color: #2b2b2b;
+      border-color: #4a4a4a;
+      color: #fff;
+    }
+
+    .button {
+      background-color: #7b88ff;
+      border-color: #7b88ff;
+      color: #fff;
+    }
+
+    .button:hover {
+      background-color: #5c64c7;
+      border-color: #5c64c7;
+    }
+
+    .list-item {
+      background-color: #2b2b2b;
+      border-color: #4a4a4a;
+      color: #fff;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-radius: 0.25rem;
+    }
+
+    .strength-meter {
+      height: 10px;
+      margin-top: 0.5rem;
+    }
+
+    .strength-weak {
+      background-color: #ff7e7e;
+    }
+
+    .strength-moderate {
+      background-color: #ffd97e;
+    }
+
+    .strength-strong {
+      background-color: #7eff7e;
+    }
+
+    .strength-meter::after {
+      content: "";
+      display: block;
+      height: 100%;
+    }
+
+    .error-popup {
+      background-color: #ff7e7e;
+      color: #fff;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -18,72 +81,134 @@
     <h1 class="text-2xl font-bold mb-4">Password Generator</h1>
     <div class="mb-4">
       <label class="block mb-2">Password Length:</label>
-      <input id="password-length" type="number" min="4" max="20" value="8" class="w-full py-2 px-3 border border-gray-300 rounded">
+      <input id="password-length" type="number" min="4" max="20" value="8" class="w-full py-2 px-3 border form-input rounded">
+    </div>
+    <div class="mb-4">
+      <label class="block mb-2">Include:</label>
+      <div class="flex flex-wrap">
+        <label class="inline-flex items-center mr-4">
+          <input type="checkbox" id="include-uppercase" class="form-checkbox">
+          <span class="ml-2">Uppercase</span>
+        </label>
+        <label class="inline-flex items-center mr-4">
+          <input type="checkbox" id="include-lowercase" class="form-checkbox">
+          <span class="ml-2">Lowercase</span>
+        </label>
+        <label class="inline-flex items-center mr-4">
+          <input type="checkbox" id="include-numbers" class="form-checkbox">
+          <span class="ml-2">Numbers</span>
+        </label>
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="include-special" class="form-checkbox">
+          <span class="ml-2">Special Characters</span>
+        </label>
+      </div>
     </div>
     <div class="mb-4">
       <label class="block mb-2">Generated Password:</label>
-      <input id="generated-password" type="text" class="w-full py-2 px-3 border border-gray-300 rounded" readonly>
+      <input id="generated-password" type="text" class="w-full py-2 px-3 border form-input rounded" readonly>
+      <div id="strength-meter" class="strength-meter mt-2"></div>
     </div>
-    <button id="generate-button" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Generate Password</button>
-    <button id="save-button" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">Save Password</button>
+    <div class="flex justify-between">
+      <button id="generate-button" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded button">Generate Password</button>
+      <button id="copy-button" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded button">Copy Password</button>
+    </div>
     <ul id="password-list" class="mt-4"></ul>
   </div>
 
   <script>
     const generateButton = document.getElementById("generate-button");
-    const saveButton = document.getElementById("save-button");
+    const copyButton = document.getElementById("copy-button");
     const passwordLengthInput = document.getElementById("password-length");
+    const includeUppercaseInput = document.getElementById("include-uppercase");
+    const includeLowercaseInput = document.getElementById("include-lowercase");
+    const includeNumbersInput = document.getElementById("include-numbers");
+    const includeSpecialInput = document.getElementById("include-special");
     const generatedPasswordInput = document.getElementById("generated-password");
     const passwordList = document.getElementById("password-list");
+    const strengthMeter = document.getElementById("strength-meter");
 
     generateButton.addEventListener("click", generatePassword);
-    saveButton.addEventListener("click", savePassword);
-
-    // Load saved passwords from local storage when the page loads
-    document.addEventListener("DOMContentLoaded", loadPasswords);
+    copyButton.addEventListener("click", copyPassword);
 
     function generatePassword() {
       const length = parseInt(passwordLengthInput.value);
-      const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+      const includeUppercase = includeUppercaseInput.checked;
+      const includeLowercase = includeLowercaseInput.checked;
+      const includeNumbers = includeNumbersInput.checked;
+      const includeSpecial = includeSpecialInput.checked;
+
+      if (!includeUppercase && !includeLowercase && !includeNumbers && !includeSpecial) {
+        showErrorPopup("Please select at least one character type.");
+        return;
+      }
+
+      let charset = "";
+      if (includeUppercase) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      if (includeLowercase) charset += "abcdefghijklmnopqrstuvwxyz";
+      if (includeNumbers) charset += "0123456789";
+      if (includeSpecial) charset += "!@#$%^&*()_+~`|}{[]:;?><,./-=";
+
       let password = "";
       for (let i = 0; i < length; i++) {
         const randomIndex = Math.floor(Math.random() * charset.length);
         password += charset[randomIndex];
       }
+
       generatedPasswordInput.value = password;
+      updatePasswordStrength(password);
     }
 
-    function savePassword() {
-      const password = generatedPasswordInput.value;
-      if (password) {
-        const listItem = document.createElement("li");
-        listItem.innerText = password;
-        passwordList.appendChild(listItem);
-        saveToLocalStorage(password);
+    function updatePasswordStrength(password) {
+      const length = password.length;
+      let strength = 0;
+
+      if (length >= 8) {
+        strength++;
+      }
+
+      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
+        strength++;
+      }
+
+      if (/[0-9]/.test(password)) {
+        strength++;
+      }
+
+      if (/[^a-zA-Z0-9]/.test(password)) {
+        strength++;
+      }
+
+      strengthMeter.classList.remove("strength-weak", "strength-moderate", "strength-strong");
+
+      switch (strength) {
+        case 1:
+          strengthMeter.classList.add("strength-weak");
+          break;
+        case 2:
+          strengthMeter.classList.add("strength-moderate");
+          break;
+        case 3:
+        case 4:
+          strengthMeter.classList.add("strength-strong");
+          break;
       }
     }
 
-    function saveToLocalStorage(password) {
-      let passwords = localStorage.getItem("passwords");
-      if (passwords) {
-        passwords = JSON.parse(passwords);
-      } else {
-        passwords = [];
-      }
-      passwords.push(password);
-      localStorage.setItem("passwords", JSON.stringify(passwords));
+    function copyPassword() {
+      generatedPasswordInput.select();
+      document.execCommand("copy");
+      alert("Password copied to clipboard!");
     }
 
-    function loadPasswords() {
-      let passwords = localStorage.getItem("passwords");
-      if (passwords) {
-        passwords = JSON.parse(passwords);
-        passwords.forEach(password => {
-          const listItem = document.createElement("li");
-          listItem.innerText = password;
-          passwordList.appendChild(listItem);
-        });
-      }
+    function showErrorPopup(message) {
+      const errorPopup = document.createElement("div");
+      errorPopup.classList.add("error-popup");
+      errorPopup.textContent = message;
+      document.body.appendChild(errorPopup);
+      setTimeout(() => {
+        errorPopup.remove();
+      }, 3000);
     }
   </script>
 </body>
