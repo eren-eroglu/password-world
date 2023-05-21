@@ -83,21 +83,21 @@ function copyPassword() {
 }
 
 function showErrorPopup(message) {
-  const errorPopup = document.createElement("div");
-  errorPopup.classList.add("error-popup");
+  const errorPopup = document.getElementById('errorpopup');
   errorPopup.textContent = message;
-  document.body.appendChild(errorPopup);
+  errorPopup.classList.add("error-popup");
   setTimeout(() => {
     errorPopup.remove();
   }, 3000);
 }
 
+
 function showSuccessPopup(message) {
-  const successPopup = document.createElement("div");
+  const successPopup = document.getElementById("successpopup");
   successPopup.classList.add("success-popup");
   successPopup.textContent = message;
-  document.body.appendChild(successPopup);
   setTimeout(() => {
-    successPopup.remove();
+    successPopup.textContent = "";
+    successPopup.classList.remove("success-popup");
   }, 3000);
 }

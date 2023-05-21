@@ -49,13 +49,20 @@
       <button id="copy-button" class="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded button">Copy Password</button>
     </div>
     <ul id="password-list" class="mt-4"></ul>
-
+    <div id="successpopup"></div>
+    <div id="errorpopup"></div>
+    <div id="extension-popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden">
+      <div class="bg-gray-900 p-8 rounded-lg shadow-lg">
+        <p class="text-2xl text-green-400 mb-4">The extension version is coming soon!</p>
+        <button id="close-popup" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Close</button>
+      </div>
+    </div>
+    
     <div class="description bg-white bg-opacity-25 rounded-3xl p-5">
-      <h2 class="text-lg font-bold mb-2 ">About Password World</h2>
+      <h2 class="text-lg font-bold mb-2">About Password World</h2>
       <p>
         This is a modern password generation tool designed to create strong and secure passwords.
       </p>
-      
       <p class="mt-2">
         <strong class="text-green-500">This app does not store any passwords.</strong> The passwords are generated on the client-side and are not transmitted or stored anywhere. However, it is important to follow good password management practices to enhance the security of your passwords.
       </p>
@@ -63,15 +70,37 @@
         You can check out the source code on <strong><a href="https://github.com/eren-eroglu/password-world" class="github-link">GitHub</a></strong>.
       </p>
     </div>
-
-    <div class="contact-section bottom-0 absolute flex flex-col">
-      <h2 class="text-lg font-bold mb-2 ">Contact</h2>
+    <div class="contact-section bottom-0 flex-col">
+      <h2 class="text-lg font-bold mb-2">Contact</h2>
       <p class="contact-text">
-        For any inquiries or feedback, please email me at <div> <strong><a href="mailto:ereneroglu.dev@gmail.com" class="underline">
-                ereneroglu.dev@gmail.com
-        </strong></div>
+        For any inquiries or feedback, please email me at <strong><a href="mailto:ereneroglu.dev@gmail.com" class="underline">ereneroglu.dev@gmail.com</a></strong>.
       </p>
     </div>
   </div>
+
+  <script>
+    const extensionPopup = document.getElementById('extension-popup');
+    const closePopupButton = document.getElementById('close-popup');
+  
+    closePopupButton.addEventListener('click', () => {
+      hidePopup();
+    });
+  
+    window.addEventListener('click', (event) => {
+      if (event.target === extensionPopup) {
+        hidePopup();
+      }
+    });
+  
+    function hidePopup() {
+      extensionPopup.classList.add('hidden');
+    }
+  
+    // Show the popup after a delay (e.g., 5 seconds)
+    setTimeout(() => {
+      extensionPopup.classList.remove('hidden');
+    }, 5000);
+  </script>
+  
 </body>
 </html>
