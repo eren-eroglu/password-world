@@ -1,5 +1,8 @@
 # Password World
 
+This project has been published on Chrome Extension Store too! 
+Download here : https://chrome.google.com/webstore/detail/random-password-generator/holmjanjldgdbfgphcjfloffhmemkglp?hl=en&authuser=2
+
 Password World is a modern password generation tool that allows you to create strong and secure passwords with customizable length and character types. This web application is designed to generate passwords on the client-side, ensuring your privacy and reducing the risk of unauthorized access.
 
 ![Password World Screenshot](screenshot.png)
