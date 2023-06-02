@@ -52,11 +52,24 @@
     <div id="successpopup"></div>
     <div id="errorpopup"></div>
     <div id="extension-popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden">
-      <div class="bg-gray-900 p-8 rounded-lg shadow-lg">
-        <p class="text-2xl text-green-400 mb-4">The extension version is coming soon!</p>
-        <button id="close-popup" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Close</button>
+      <div style="background-color: #0a192f; padding: 16px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);">
+        <p style="font-size: 1.8rem; color: #61dafb; margin-bottom: 8px;">
+          You can now download it now as a Chrome extension!
+        </p>
+        <div class="text-center">
+          <a href="https://chrome.google.com/webstore/detail/random-password-generator/holmjanjldgdbfgphcjfloffhmemkglp?hl=en&authuser=2" style="color: #61dafb; text-decoration: none;">
+            <span style="background-color: #61dafb; color: #fff; padding: 8px  16px; margin: 3px; border-radius: 4px; font-size: 1.2rem;" class="text-center ">
+              Check App 
+            </span>
+          </a>
+        </div>
+        <button id="close-popup" >
+          
+        </button>
       </div>
     </div>
+    
+    
     
     <div class="description bg-white bg-opacity-25 rounded-3xl p-5">
       <h2 class="text-lg font-bold mb-2">About Password World</h2>
@@ -99,7 +112,7 @@
     // Show the popup after a delay (e.g., 5 seconds)
     setTimeout(() => {
       extensionPopup.classList.remove('hidden');
-    }, 5000);
+    }, 2000);
   </script>
   
 </body>
